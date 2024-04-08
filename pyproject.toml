@@ -1,0 +1,26 @@
+[project]
+name = "llm-zhipu"
+version = "0.1"
+description = "ChatGLM"
+readme = "README.md"
+authors = [{name = "noahlias"}]
+license = {text = "Apache-2.0"}
+classifiers = [
+    "License :: OSI Approved :: Apache Software License"
+]
+dependencies = [
+    "llm",
+		"zhipuai"
+]
+
+[project.urls]
+Homepage = "https://github.com/noahlias/llm-zhipu"
+Changelog = "https://github.com/noahlias/llm-zhipu/releases"
+Issues = "https://github.com/noahlias/llm-zhipu/issues"
+CI = "https://github.com/noahlias/llm-zhipu/actions"
+
+[project.entry-points.llm]
+zhipu = "llm_zhipu"
+
+[project.optional-dependencies]
+test = ["pytest"]
