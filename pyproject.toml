@@ -3,15 +3,10 @@ name = "llm-zhipu"
 version = "0.2"
 description = "ChatGLM"
 readme = "README.md"
-authors = [{name = "noahlias"}]
-license = {text = "Apache-2.0"}
-classifiers = [
-    "License :: OSI Approved :: Apache Software License"
-]
-dependencies = [
-    "llm",
-		"zhipuai"
-]
+authors = [{ name = "noahlias" }]
+license = { text = "Apache-2.0" }
+classifiers = ["License :: OSI Approved :: Apache Software License"]
+dependencies = ["llm", "zhipuai"]
 
 [project.urls]
 Homepage = "https://github.com/noahlias/llm-zhipu"
@@ -31,10 +26,5 @@ build-backend = "hatchling.build"
 
 
 [tool.hatch.build.targets.sdist]
-ignore-vcs = true
-include = [
-  "*.py",
-]
-exclude = [
-  "assets/*",
-]
+include = ["*.py"]
+exclude = [".gitignore", "assets/*"]
