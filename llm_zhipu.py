@@ -1,9 +1,11 @@
-import llm
-import click
-from llm.default_plugins.openai_models import remove_dict_none_values
-from typing import List
-from zhipuai import ZhipuAI
 import sys
+from typing import List
+
+import click
+import llm
+from llm.default_plugins.openai_models import remove_dict_none_values
+from zhipuai import ZhipuAI
+
 
 def combine_chunks(chunks: List) -> dict:
     content = ""
