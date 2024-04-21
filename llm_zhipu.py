@@ -2,6 +2,8 @@ import sys
 from typing import List
 
 import click
+import base64
+import re
 import llm
 from llm.default_plugins.openai_models import remove_dict_none_values
 from zhipuai import ZhipuAI
@@ -49,12 +51,27 @@ def combine_chunks(chunks: List) -> dict:
 
     return combined
 
+def solve_image(image:str):
+    # regex to filter is an url or extension image
+    # it should be judge https:// or http://
+    # NOTE: the zhipuai api error  <04/21, 2024, Noahlias> #
+    if re.match(r'^https?://', image):
+        result = image
+    elif re.match(r'.+\.(jpg|jpeg|png)$', image):
+        with open(image, "rb") as f:
+            result = base64.b64encode(f.read()).decode("utf-8")
+        result = "data:image/jpeg;base64," + result
+    else:
+        raise ValueError("Please input a valid image url or image file path")
+    return result
+
+
 @llm.hookimpl
 def register_commands(cli):
     @cli.command()
     @click.option("-s", "--system", help="System prompt to use")
-    @click.option("-l", "--url", help="Image URL to use")
-    def image_identify_chatglm(system, url):
+    @click.option("-i", "--image", help="Image file to use")
+    def image_identify_chatglm(system, image):
         "Use chatglm to identify image"
 
         model_id = 'glm-4v'
@@ -67,7 +84,7 @@ def register_commands(cli):
       {
         "type": "image_url",
         "image_url": {
-          "url" : url
+          "url" : image
         }
       }
       ]
