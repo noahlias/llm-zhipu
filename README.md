@@ -27,6 +27,16 @@ llm image-identify-chatglm -i 'https://img1.baidu.com/it/u=1369931113,3388870256
 
 ![output](./assets/output.jpg)
 
+Or you can use it with local images:
+
+![local](./assets/10.jpg)
+
+```bash
+llm image-identify-chatglm -i assets/10.jpg
+```
+
+![](assets/output2.png)
+
 ## Development
 
 To set up this plugin locally, first checkout the code. Then create a new virtual environment:
