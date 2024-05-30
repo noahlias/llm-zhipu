@@ -65,7 +65,8 @@ def solve_image(image: str):
     elif re.match(r".+\.(jpg|jpeg|png)$", image):
         with open(image, "rb") as f:
             result = base64.b64encode(f.read()).decode("utf-8")
-        result = "data:image/jpeg;base64," + result
+        # NOTE: zhipuai api wierd
+        # result = "data:image/jpeg;base64," + result
     else:
         raise ValueError("Please input a valid image url or image file path")
     return result
