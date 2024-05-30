@@ -19,7 +19,11 @@ def combine_chunks(chunks: List) -> dict:
 
     for item in chunks:
         for choice in item.choices:
-            if hasattr(choice, "logrobs") and choice.logprobs and hasattr(choice.logprobs, "top_logprobs"):
+            if (
+                hasattr(choice, "logrobs")
+                and choice.logprobs
+                and hasattr(choice.logprobs, "top_logprobs")
+            ):
                 logprobs.append(
                     {
                         "text": choice.text if hasattr(choice, "text") else None,
@@ -51,13 +55,14 @@ def combine_chunks(chunks: List) -> dict:
 
     return combined
 
-def solve_image(image:str):
+
+def solve_image(image: str):
     # regex to filter is an url or extension image
     # it should be judge https:// or http://
     # NOTE: the zhipuai api error  <04/21, 2024, Noahlias> #
-    if re.match(r'^https?://', image):
+    if re.match(r"^https?://", image):
         result = image
-    elif re.match(r'.+\.(jpg|jpeg|png)$', image):
+    elif re.match(r".+\.(jpg|jpeg|png)$", image):
         with open(image, "rb") as f:
             result = base64.b64encode(f.read()).decode("utf-8")
         result = "data:image/jpeg;base64," + result
@@ -74,31 +79,24 @@ def register_commands(cli):
     def image_identify_chatglm(system, image):
         "Use chatglm to identify image"
 
-        model_id = 'glm-4v'
+        model_id = "glm-4v"
         model = ChatGLMMessages(model_id)
         prompt = [
-      {
-        "type": "text",
-        "text": "解释一下图中的现象"
-      },
-      {
-        "type": "image_url",
-        "image_url": {
-          "url" : image
-        }
-      }
-      ]
-        response = model.prompt(prompt,system)
+            {"type": "text", "text": "解释一下图中的现象"},
+            {"type": "image_url", "image_url": {"url": solve_image(image)}},
+        ]
+        response = model.prompt(prompt, system)
         for chunk in response:
             print(chunk, end="")
             sys.stdout.flush()
 
+
 @llm.hookimpl
 def register_models(register):
-    #https://open.bigmodel.cn/dev/api
-    register(ChatGLMMessages("glm-3-turbo"), aliases=("glm3",))
-    register(ChatGLMMessages("glm-4"), aliases=("glm4",))
-    register(ChatGLMMessages("glm-4v"), aliases=("glm4v",))
+    # https://open.bigmodel.cn/dev/api
+    register(ChatGLMMessages("glm-3-turbo"), aliases=("GLM3",))
+    register(ChatGLMMessages("glm-4"), aliases=("GLM4",))
+    register(ChatGLMMessages("glm-4v"), aliases=("GLM4V",))
 
 
 class ChatGLMMessages(llm.Model):
@@ -155,9 +153,6 @@ class ChatGLMMessages(llm.Model):
             )
             response.response_json = remove_dict_none_values(completion.dict())
             yield completion.choices[0].message.content
-
-
-
 
     def __str__(self):
         return "ChatGLM Messages: {}".format(self.model_id)
